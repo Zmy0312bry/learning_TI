@@ -24,7 +24,7 @@ void STEP_MOTOR_setAngle(float angle,
     delay_cycles(DIR_STABLE_CYCLES);
     
     // 生成指定脉冲PWM
-    DL_TimerG_setCaptureCompareValue(step_inst,400,step_idx);
+    DL_TimerG_setCaptureCompareValue(step_inst,1000,step_idx);
     *motor_state=MOTOR_MOVING;
 
 }

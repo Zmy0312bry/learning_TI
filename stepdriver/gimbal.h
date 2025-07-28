@@ -13,7 +13,7 @@
 #define CHANNEL_UP_DIR_REG     GPIO_DIR_Down_PORT
 #define CHANNEL_UP_DIR_PIN     GPIO_DIR_Down_PIN_0_PIN 
 #define CHANNEL_UP_STEP_REG    PWM_Stepper_Down_INST
-#define CHANNEL_UP_STEP_INDEX  GPIO_PWM_Stepper_Down_C0_IDX  
+#define CHANNEL_UP_STEP_INDEX  GPIO_PWM_Stepper_Down_C1_IDX  
 
 void GIMBAL_setAngle(float angle_down,float angle_up,
                     uint32_t* steps_up, uint32_t* steps_down,

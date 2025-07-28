@@ -38,14 +38,16 @@
 #include "stdio.h"
 
 /* This is the space for you to set general varible */
-int pulse_number_up = 0;
-int pulse_number_down = 0;
-volatile unsigned char uart_data = 0;
-uint32_t steps_up;
-uint32_t stepper_state_up;
+volatile uint32_t pulse_number_up = 0;
+volatile uint32_t pulse_number_down = 0;
 
-uint32_t steps_down;
-uint32_t stepper_state_down;
+volatile unsigned char uart_data = 0;
+
+uint32_t steps_up=0;
+uint32_t stepper_state_up=2;
+
+uint32_t steps_down=0;
+uint32_t stepper_state_down=2;
 /* This is the end of general varible */
 
 /* This plaace is for you to declare functions */
@@ -63,7 +65,7 @@ int main(void) {
   NVIC_EnableIRQ(UART_TTL_INST_INT_IRQN);
   /* This is the end of init */
   // STEP_MOTOR_setAngle(-90.0f, GPIO_DIR_PORT, GPIO_DIR_PIN_0_PIN,PWM_Stepper_INST, GPIO_PWM_Stepper_C0_IDX);
-  GIMBAL_setAngle(90,90,&steps_up,&steps_down,&stepper_state_up,&stepper_state_down);
+  GIMBAL_setAngle(30,60,&steps_up,&steps_down,&stepper_state_up,&stepper_state_down);
   while (1) {
     // STEP_MOTOR_UpDate(PWM_Stepper_INST, GPIO_PWM_Stepper_C0_IDX);
     GIMBAL_Update(&stepper_state_up,&stepper_state_down);
@@ -74,23 +76,24 @@ int main(void) {
 void GROUP1_IRQHandler(void) // Group1的中断服务函数
 {
   // 读取Group1的中断寄存器并清除中断标志位
-  switch (DL_Interrupt_getPendingGroup(DL_INTERRUPT_GROUP_1)) {
+  if (DL_Interrupt_getPendingGroup(DL_INTERRUPT_GROUP_1)) {
   // 检查是否是KEY的GPIOB端口中断
-  case PWM_Counter_Up_PIN_1_IIDX:
+  if (PWM_Counter_Up_PIN_1_IIDX){
     if (pulse_number_up >= steps_up) {
       stepper_state_up = MOTOR_STOP;
       pulse_number_up = 0;
     } else {
       pulse_number_up++;
     }
-    break;
-  case PWM_Counter_Down_PIN_3_IIDX:
-    if (pulse_number_up >= steps_down) {
+  }
+  if (PWM_Counter_Down_PIN_3_IIDX){
+    if (pulse_number_down >= steps_down) {
       stepper_state_down = MOTOR_STOP;
-      pulse_number_up = 0;
+      pulse_number_down = 0;
     } else {
-      pulse_number_up++;
+      pulse_number_down++;
     }
+  }
   }
 }
 
